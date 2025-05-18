@@ -2,9 +2,9 @@
 param()
 #region Initialize
 
-#Start the Transcript
-$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
-$null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
+# Start Transcript
+$Transcript = "C:\programdata\Microsoft\IntuneManagementExtension\Logs\$($(Split-Path $PSCommandPath -Leaf).ToLower().Replace(".ps1",".log"))"
+Start-Transcript -Path $Transcript | Out-Null
 
 #=================================================
 #   oobeCloud Settings
