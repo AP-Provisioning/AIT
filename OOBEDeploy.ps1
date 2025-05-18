@@ -25,6 +25,7 @@ $Global:oobeCloud = @{
     oobeRestartComputer = $false
     EmbeddedProductKey = $true
     oobeStopComputer = $false
+    oobeWindowsDefenderUpdate = $true
 }
 
 function Step-KeyboardLanguage {
@@ -374,6 +375,32 @@ function Step-oobeStopComputer {
     }
 }
 
+function Step-oobeWindowsDefenderUpdate {
+    [CmdletBinding()]
+    param ()
+    
+    if (($env:UserName -ne 'defaultuser0') -and ($Global:oobeCloud.oobeWindowsDefenderUpdate -eq $true)) {
+        # Get current Windows Defender Status
+        Write-Output "Get current Windows Defender Status:"
+        Get-MpComputerStatus | FL AMEngineVersion,AMProductVersion,AntivirusSignatureLastUpdated,RealTimeProtectionEnabled
+
+        # Microsoft Antimalware Service Command Line Utility
+        $MpCmdRun = "${env:ProgramFiles}\Windows Defender\MpCmdRun.exe"
+        if (Test-Path $MpCmdRun -PathType Leaf) {
+            Write-Output "Force Windows Defender Update"
+            $UpdateResult = & $MpCmdRun -SignatureUpdate -MMPC
+            Write-Output $UpdateResult
+        } else {
+            Write-Output "Cannot find the Microsoft Antimalware Service Command Line Utility: $MpCmdRun"
+        }
+
+        # Get updated Windows Defender Status
+        Write-Output "Get updated Windows Defender Status:"
+        Get-MpComputerStatus | FL AMEngineVersion,AMProductVersion,AntivirusSignatureLastUpdated,RealTimeProtectionEnabled
+    } 
+}
+
+
 function Step-oobeUpdateEdge {
     [CmdletBinding()]
     param ()
@@ -441,6 +468,7 @@ Step-oobeRegisterAutopilot
 Step-EmbeddedProductKey
 Step-oobeRemoveAppxPackage
 Step-oobeAddCapability
+Step-oobeWindowsDefenderUpdate 
 Step-oobeUpdateEdge
 Step-oobeUpdateDrivers
 Step-oobeUpdateWindows
