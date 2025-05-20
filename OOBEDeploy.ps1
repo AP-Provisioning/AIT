@@ -3,8 +3,8 @@ param()
 #region Initialize
 
 # Start Transcript
-$Transcript = "C:\programdata\Microsoft\IntuneManagementExtension\Logs\$($(Split-Path $PSCommandPath -Leaf).ToLower().Replace(".ps1",".log"))"
-Start-Transcript -Path $Transcript | Out-Null
+$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OOBEDeploy.log"
+Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Transcript) -ErrorAction Ignore | Out-Null
 
 #=================================================
 #   oobeCloud Settings
@@ -475,4 +475,6 @@ Step-oobeUpdateWindows
 # Invoke-Webhook
 Step-oobeRestartComputer
 Step-oobeStopComputer
+
+Stop-Transcript | Out-Null
 #=================================================
