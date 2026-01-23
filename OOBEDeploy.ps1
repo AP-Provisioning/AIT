@@ -23,7 +23,7 @@ $Global:oobeCloud = @{
     oobeUpdateDrivers = $true
     oobeUpdateWindows = $true
     oobeRestartComputer = $false
-    EmbeddedProductKey = $true
+    EmbeddedProductKey = $false
     oobeStopComputer = $false
     oobeWindowsDefenderUpdate = $true
 }
